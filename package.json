@@ -1,0 +1,23 @@
+{
+  "name": "@ktsierra/prettier-config",
+  "version": "1.0.0",
+  "description": "My personal Prettier configurations",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "keywords": [
+    "prettier",
+    "config"
+  ],
+  "author": "Jose Sierra",
+  "license": "MIT",
+  "peerDependencies": {
+    "prettier": "^3.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ]
+}
