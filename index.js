@@ -6,5 +6,5 @@ export default {
   trailingComma: "es5",
   bracketSpacing: true,
   bracketSameLine: false,
-  printWidth: 80,
+  printWidth: 120,
 };

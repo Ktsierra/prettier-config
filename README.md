@@ -35,7 +35,7 @@ module.exports = require('@ktsierra/prettier-config');
 - Trailing commas where valid in ES5 (\`trailingComma: 'es5'\`)
 - Bracket spacing enabled (\`bracketSpacing: true\`)
 - Brackets on new lines for JSX (\`bracketSameLine: false\`)
-- Line width set to 80 characters (\`printWidth: 80\`)
+- Line width set to 80 characters (\`printWidth: 120\`)
 
 ## Example Configuration
 
@@ -48,7 +48,7 @@ export default {
   trailingComma: 'es5',
   bracketSpacing: true,
   bracketSameLine: false,
-  printWidth: 80,
+  printWidth: 120,
 };
 ```
 
