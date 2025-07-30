@@ -11,9 +11,11 @@ npm install -D @ktsierra/prettier-config prettier
 
 ## Usage
 
-To use this shared configuration in your project, create a \`prettier.config.js\` (or \`prettier.config.cjs\`) file at the root of your repository:
+To use this shared configuration in your project, create a `prettier.config.mjs` (or `prettier.config.cjs`) file at the root of your repository:
 
-### For ESM (\`.js\`)
+> **Note:** It's important to use the `.mjs` extension for ESM configurations so that Node.js correctly interprets the file as an ES Module. Using `.js` will not work.
+
+### For ESM (`.mjs`)
 
 ```js
 import config from '@ktsierra/prettier-config';
