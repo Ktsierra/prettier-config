@@ -18,6 +18,9 @@
   },
   "files": [
     "index.js",
+    "index.d.ts",
     "README.md"
-  ]
+  ],
+  "types": "index.d.ts"
 }
+
