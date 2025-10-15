@@ -1,6 +1,6 @@
 {
   "name": "@ktsierra/prettier-config",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "My personal Prettier configurations",
   "main": "index.js",
   "type": "module",
