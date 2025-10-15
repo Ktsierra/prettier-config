@@ -1,61 +1,69 @@
-name: Publish to NPM
+name: Bump & Publish
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-    inputs:
-      version_type:
-        description: 'Version bump type'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+    branches:
+      - main
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
-  publish:
+  bump-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.12.4
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Configure Git
+      - name: Get latest commit message
+        id: commit
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          echo "msg<<EOF" >> $GITHUB_OUTPUT
+          git log -1 --pretty=%B >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Automated Version Bump
-        uses: phips28/gh-action-bump-version@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          default: patch
-          minor-wording: '#minor'
-          major-wording: '#major'
+      - name: Determine version bump type
+        id: bump
+        run: |
+          msg="${{ steps.commit.outputs.msg }}"
+          if [[ "$msg" =~ "#major" ]]; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif [[ "$msg" =~ "#minor" ]]; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Publish to NPM
-        run: pnpm publish --access public
+      - name: Bump version
+        run: npm version ${{ steps.bump.outputs.type }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
+
+      - name: Push changes and tags
+        run: |
+          git push origin main
+          git push origin --tags
+
+      - name: Publish to npm
+        run: npm publish --access public
